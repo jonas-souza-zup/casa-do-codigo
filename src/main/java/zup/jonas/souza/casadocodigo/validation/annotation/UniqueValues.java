@@ -1,21 +1,22 @@
 package zup.jonas.souza.casadocodigo.validation.annotation;
 
-import zup.jonas.souza.casadocodigo.validation.ExistsConstraint;
+import zup.jonas.souza.casadocodigo.validation.UniqueValuesConstraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = ExistsConstraint.class)
-@Target({ElementType.FIELD})
+@Constraint(validatedBy = UniqueValuesConstraint.class)
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Exists {
-    String field();
+public @interface UniqueValues {
 
-    Class<?> modelClass();
+    String[] fields();
 
-    String message() default "não existe";
+    Class<?> domainClass();
+
+    String message() default "deve ser único";
 
     Class<?>[] groups() default {};
 

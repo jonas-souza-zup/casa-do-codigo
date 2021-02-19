@@ -14,12 +14,12 @@ public class ExistsConstraint implements ConstraintValidator<Exists, Object> {
 
     private String field;
 
-    private Class<?> domainClass;
+    private Class<?> modelClass;
 
     @Override
     public void initialize(Exists constraintAnnotation) {
         field = constraintAnnotation.field();
-        domainClass = constraintAnnotation.domainClass();
+        modelClass = constraintAnnotation.modelClass();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ExistsConstraint implements ConstraintValidator<Exists, Object> {
     }
 
     private String getTableName() {
-        return domainClass.getSimpleName();
+        return modelClass.getSimpleName();
     }
 
     private Query createQuery(Object value) {

@@ -1,7 +1,6 @@
 package zup.jonas.souza.casadocodigo.controller.form;
 
 import zup.jonas.souza.casadocodigo.model.Autor;
-import zup.jonas.souza.casadocodigo.repository.AutorRepository;
 import zup.jonas.souza.casadocodigo.validation.annotation.Unique;
 
 import javax.validation.constraints.Email;
@@ -15,7 +14,7 @@ public class NovoAutorForm {
 
     @NotBlank
     @Email
-    @Unique(name = "email", repository = AutorRepository.class)
+    @Unique(modelClass = Autor.class, field = "email")
     private String email;
 
     @NotBlank

@@ -6,7 +6,6 @@ import zup.jonas.souza.casadocodigo.model.Categoria;
 import zup.jonas.souza.casadocodigo.model.Livro;
 import zup.jonas.souza.casadocodigo.repository.AutorRepository;
 import zup.jonas.souza.casadocodigo.repository.CategoriaRepository;
-import zup.jonas.souza.casadocodigo.repository.LivroRepository;
 import zup.jonas.souza.casadocodigo.validation.annotation.Exists;
 import zup.jonas.souza.casadocodigo.validation.annotation.Unique;
 
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 public class NovoLivroForm {
 
     @NotBlank
-    @Unique(name = "titulo", repository = LivroRepository.class)
+    @Unique(modelClass = Livro.class, field = "titulo")
     private String titulo;
 
     @NotBlank
@@ -35,18 +34,18 @@ public class NovoLivroForm {
     private Integer numeroPaginas;
 
     @NotBlank
-    @Unique(name = "isbn", repository = LivroRepository.class)
+    @Unique(modelClass = Livro.class, field = "isbn")
     private String isbn;
 
     @Future
     private LocalDate dataPublicacao;
 
     @NotNull
-    @Exists(domainClass = Categoria.class, field = "id")
+    @Exists(modelClass = Categoria.class, field = "id")
     private Long categoriaId;
 
     @NotNull
-    @Exists(domainClass = Autor.class, field = "id")
+    @Exists(modelClass = Autor.class, field = "id")
     private Long autorId;
 
     public NovoLivroForm(@NotBlank String titulo, @NotBlank @Size(max = 500) String resumo, String sumario, @NotNull @NotEmpty @Min(20) BigDecimal preco, @NotNull @Min(100) Integer numeroPaginas, @NotBlank String isbn, @Future LocalDate dataPublicacao, @NotNull Long categoriaId, @NotNull Long autorId) {

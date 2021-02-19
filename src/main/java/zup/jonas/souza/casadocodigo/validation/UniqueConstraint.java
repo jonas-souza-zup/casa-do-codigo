@@ -1,52 +1,39 @@
 package zup.jonas.souza.casadocodigo.validation;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.repository.Repository;
-import org.springframework.util.StringUtils;
 import zup.jonas.souza.casadocodigo.validation.annotation.Unique;
 
-import javax.el.MethodNotFoundException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
-public class UniqueConstraint implements ConstraintValidator<Unique, String> {
-    @Autowired
-    private ApplicationContext context;
+public class UniqueConstraint implements ConstraintValidator<Unique, Object> {
 
-    private Repository<?, ?> repository;
+    @PersistenceContext
+    private EntityManager manager;
 
-    private String fieldName;
+    private String field;
+
+    private Class<?> modelClass;
 
     @Override
     public void initialize(Unique constraintAnnotation) {
-        fieldName = constraintAnnotation.name();
-        repository = context.getBean(constraintAnnotation.repository());
+        field = constraintAnnotation.field();
+        modelClass = constraintAnnotation.modelClass();
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        var methodName = getMethodName(this.fieldName);
-        var method = BeanUtils.findMethod(repository.getClass(), methodName, String.class);
-        if (method != null) {
-            try {
-                var result = method.invoke(repository, value);
-                if (result == null && method.getReturnType().isAssignableFrom(List.class)) return true;
-                if (result instanceof List) {
-                    return ((List<?>) result).isEmpty();
-                }
-                return false;
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        throw new MethodNotFoundException("Method " + methodName + " not Found");
+    public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
+        if (value == null) return true;
+        return createQuery(value).getResultList().isEmpty();
     }
 
-    private String getMethodName(String fieldName) {
-        return "findBy" + StringUtils.capitalize(fieldName);
+    private String getTableName() {
+        return modelClass.getSimpleName();
+    }
+
+    private Query createQuery(Object value) {
+        return manager.createQuery("select t from " + getTableName() + " t where t." + field + " = '" + value + "'");
     }
 }

@@ -5,17 +5,21 @@ import zup.jonas.souza.casadocodigo.model.Estado;
 import zup.jonas.souza.casadocodigo.model.Pais;
 import zup.jonas.souza.casadocodigo.repository.PaisRepository;
 import zup.jonas.souza.casadocodigo.validation.annotation.Exists;
+import zup.jonas.souza.casadocodigo.validation.annotation.FieldAlias;
+import zup.jonas.souza.casadocodigo.validation.annotation.UniqueValues;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@UniqueValues(domainClass = Estado.class, fields = {"nome", "paisId"})
 public class NovoEstadoForm {
 
     @NotBlank
     private String nome;
 
     @NotNull
-    @Exists(domainClass = Pais.class, field = "id")
+    @Exists(modelClass = Pais.class, field = "id")
+    @FieldAlias("pais.id")
     private Integer paisId;
 
     public NovoEstadoForm(String nome, Integer paisId) {

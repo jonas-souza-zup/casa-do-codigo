@@ -12,9 +12,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Unique {
-    String name();
+    String field();
 
-    Class<? extends Repository<?, ?>> repository();
+    Class<?> modelClass();
 
     String message() default "deve ser único";
 
