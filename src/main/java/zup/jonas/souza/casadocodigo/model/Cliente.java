@@ -19,6 +19,9 @@ public class Cliente {
     @Column(unique = true)
     private String documento;
 
+    @Enumerated(EnumType.STRING)
+    private TipoPessoa tipoPessoa;
+
     private String endereco;
 
     private String complemento;
@@ -40,11 +43,12 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String email, String nome, String sobrenome, String documento, String endereco, String complemento, String cidade, Pais pais, Estado estado, String telefone, String cep) {
+    public Cliente(String email, String nome, String sobrenome, String documento, TipoPessoa tipoPessoa, String endereco, String complemento, String cidade, Pais pais, Estado estado, String telefone, String cep) {
         this.email = email;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.documento = documento;
+        this.tipoPessoa = tipoPessoa;
         this.endereco = endereco;
         this.complemento = complemento;
         this.cidade = cidade;
@@ -72,6 +76,10 @@ public class Cliente {
 
     public String getDocumento() {
         return documento;
+    }
+
+    public TipoPessoa getTipoPessoa() {
+        return tipoPessoa;
     }
 
     public String getEndereco() {
