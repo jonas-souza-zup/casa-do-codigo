@@ -38,7 +38,7 @@ public class UniqueConstraint implements ConstraintValidator<Unique, String> {
                 if (result instanceof List) {
                     return ((List<?>) result).isEmpty();
                 }
-                return true;
+                return false;
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }

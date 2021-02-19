@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "livros")
 public class Livro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +32,7 @@ public class Livro {
 
     private LocalDate dataPublicacao;
 
-    @ManyToMany
+    @ManyToOne
     private Categoria categoria;
 
     @OneToOne

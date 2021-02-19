@@ -6,7 +6,7 @@ import zup.jonas.souza.casadocodigo.validation.annotation.Unique;
 
 import javax.validation.constraints.NotBlank;
 
-public class NovaCategoriaForm implements ModelForm<Categoria> {
+public class NovaCategoriaForm {
 
     @NotBlank
     @Unique(name = "nome", repository = CategoriaRepository.class)
@@ -19,8 +19,7 @@ public class NovaCategoriaForm implements ModelForm<Categoria> {
     public String getNome() {
         return nome;
     }
-
-    @Override
+    
     public Categoria toModel() {
         return new Categoria(nome);
     }

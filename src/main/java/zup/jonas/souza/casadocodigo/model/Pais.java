@@ -3,24 +3,24 @@ package zup.jonas.souza.casadocodigo.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "categorias")
-public class Categoria {
+@Table(name = "paises")
+public class Pais {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(unique = true)
     private String nome;
 
     @Deprecated
-    public Categoria() {
-    }
+    public Pais() {}
 
-    public Categoria(String nome) {
+    public Pais(String nome) {
         this.nome = nome;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

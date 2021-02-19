@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CategoriaRepository extends PagingAndSortingRepository<Categoria, Long> {
 
-    List<Categoria> findByName(String name);
+    List<Categoria> findByNome(String name);
 }
