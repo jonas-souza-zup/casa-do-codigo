@@ -1,6 +1,6 @@
 package zup.jonas.souza.casadocodigo.validation.annotation;
 
-import zup.jonas.souza.casadocodigo.validation.ExistsConstraint;
+import zup.jonas.souza.casadocodigo.validation.constraints.ExistsConstraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

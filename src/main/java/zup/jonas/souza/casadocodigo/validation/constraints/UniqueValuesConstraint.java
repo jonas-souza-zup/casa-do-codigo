@@ -1,4 +1,4 @@
-package zup.jonas.souza.casadocodigo.validation;
+package zup.jonas.souza.casadocodigo.validation.constraints;
 
 import org.springframework.beans.BeanWrapperImpl;
 import zup.jonas.souza.casadocodigo.validation.annotation.FieldAlias;

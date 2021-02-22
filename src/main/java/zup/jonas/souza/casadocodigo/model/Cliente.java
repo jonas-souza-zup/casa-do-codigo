@@ -1,5 +1,8 @@
 package zup.jonas.souza.casadocodigo.model;
 
+import zup.jonas.souza.casadocodigo.validation.RequiredIfPaisTemEstado;
+import zup.jonas.souza.casadocodigo.validation.annotation.RequiredIf;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,9 +22,6 @@ public class Cliente {
     @Column(unique = true)
     private String documento;
 
-    @Enumerated(EnumType.STRING)
-    private TipoPessoa tipoPessoa;
-
     private String endereco;
 
     private String complemento;
@@ -33,6 +33,7 @@ public class Cliente {
 
     @ManyToOne
     @JoinColumn(nullable = true)
+    @RequiredIf(RequiredIfPaisTemEstado.class)
     private Estado estado;
 
     private String telefone;
@@ -43,12 +44,11 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String email, String nome, String sobrenome, String documento, TipoPessoa tipoPessoa, String endereco, String complemento, String cidade, Pais pais, Estado estado, String telefone, String cep) {
+    public Cliente(String email, String nome, String sobrenome, String documento, String endereco, String complemento, String cidade, Pais pais, Estado estado, String telefone, String cep) {
         this.email = email;
         this.nome = nome;
         this.sobrenome = sobrenome;
         this.documento = documento;
-        this.tipoPessoa = tipoPessoa;
         this.endereco = endereco;
         this.complemento = complemento;
         this.cidade = cidade;
@@ -76,10 +76,6 @@ public class Cliente {
 
     public String getDocumento() {
         return documento;
-    }
-
-    public TipoPessoa getTipoPessoa() {
-        return tipoPessoa;
     }
 
     public String getEndereco() {

@@ -1,6 +1,6 @@
 package zup.jonas.souza.casadocodigo.validation.annotation;
 
-import zup.jonas.souza.casadocodigo.validation.UniqueValuesConstraint;
+import zup.jonas.souza.casadocodigo.validation.constraints.UniqueValuesConstraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

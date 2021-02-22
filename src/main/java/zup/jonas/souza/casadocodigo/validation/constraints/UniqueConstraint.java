@@ -1,4 +1,4 @@
-package zup.jonas.souza.casadocodigo.validation;
+package zup.jonas.souza.casadocodigo.validation.constraints;
 
 import zup.jonas.souza.casadocodigo.validation.annotation.Unique;
 

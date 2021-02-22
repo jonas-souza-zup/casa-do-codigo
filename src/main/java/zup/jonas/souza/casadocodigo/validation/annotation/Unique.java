@@ -1,7 +1,6 @@
 package zup.jonas.souza.casadocodigo.validation.annotation;
 
-import org.springframework.data.repository.Repository;
-import zup.jonas.souza.casadocodigo.validation.UniqueConstraint;
+import zup.jonas.souza.casadocodigo.validation.constraints.UniqueConstraint;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
