@@ -1,8 +1,8 @@
 package zup.jonas.souza.casadocodigo.validation.constraints;
 
-import zup.jonas.souza.casadocodigo.controller.form.NovoClienteForm;
-import zup.jonas.souza.casadocodigo.validation.RequiredCondition;
+import org.springframework.beans.BeanWrapperImpl;
 import zup.jonas.souza.casadocodigo.validation.annotation.RequiredIf;
+import zup.jonas.souza.casadocodigo.validation.interfaces.RequiredCondition;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,10 +16,16 @@ public class RequiredIfConstraint implements ConstraintValidator<RequiredIf, Obj
 
     private RequiredCondition condition;
 
+    private String field;
+
+    private String message;
+
     @Override
     public void initialize(RequiredIf constraintAnnotation) {
         try {
             condition = constraintAnnotation.value().getDeclaredConstructor().newInstance();
+            field = constraintAnnotation.field();
+            message = constraintAnnotation.message();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
@@ -27,7 +33,15 @@ public class RequiredIfConstraint implements ConstraintValidator<RequiredIf, Obj
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
-//        var unwrap = constraintValidatorContext.
-        return condition.isRequired(manager, value);
+        var bean = new BeanWrapperImpl(value);
+        if (bean.getPropertyValue(field) != null) return true;
+        var isValid = !condition.isRequired(manager, value);
+        if (!isValid) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext
+                    .buildConstraintViolationWithTemplate(message)
+                    .addPropertyNode(field).addConstraintViolation();
+        }
+        return isValid;
     }
 }

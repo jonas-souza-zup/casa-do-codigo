@@ -33,7 +33,7 @@ public class ExistsConstraint implements ConstraintValidator<Exists, Object> {
     }
 
     private Query createQuery(Object value) {
-        return manager.createQuery("select t from " + getTableName() + " t where t." + field + " = '" + value + "'");
+        return manager.createQuery("from " + getTableName() + " t where t." + field + " = '" + value + "'");
     }
 
 }

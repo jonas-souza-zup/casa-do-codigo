@@ -9,7 +9,10 @@ import zup.jonas.souza.casadocodigo.model.Estado;
 import zup.jonas.souza.casadocodigo.model.Pais;
 import zup.jonas.souza.casadocodigo.repository.EstadoRepository;
 import zup.jonas.souza.casadocodigo.repository.PaisRepository;
+import zup.jonas.souza.casadocodigo.validation.RequiredIfPaisTemEstado;
+import zup.jonas.souza.casadocodigo.validation.annotation.CpfOuCnpj;
 import zup.jonas.souza.casadocodigo.validation.annotation.Exists;
+import zup.jonas.souza.casadocodigo.validation.annotation.RequiredIf;
 import zup.jonas.souza.casadocodigo.validation.annotation.Unique;
 import zup.jonas.souza.casadocodigo.validation.interfaces.CnpjGroup;
 import zup.jonas.souza.casadocodigo.validation.interfaces.CpfGroup;
@@ -19,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @GroupSequenceProvider(ClienteGroupSequenceProvider.class)
+@RequiredIf(value = RequiredIfPaisTemEstado.class, field = "estadoId")
 public class NovoClienteForm {
 
     @Email
@@ -32,8 +36,7 @@ public class NovoClienteForm {
     private String sobrenome;
 
     @NotBlank
-    @CPF(groups = CpfGroup.class)
-    @CNPJ(groups = CnpjGroup.class)
+    @CpfOuCnpj
     @Unique(modelClass = Cliente.class, field = "documento")
     private String documento;
 

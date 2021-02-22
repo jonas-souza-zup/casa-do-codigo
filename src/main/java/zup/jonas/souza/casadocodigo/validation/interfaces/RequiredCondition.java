@@ -1,4 +1,4 @@
-package zup.jonas.souza.casadocodigo.validation;
+package zup.jonas.souza.casadocodigo.validation.interfaces;
 
 import javax.persistence.EntityManager;
 

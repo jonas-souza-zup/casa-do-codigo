@@ -20,16 +20,28 @@ public class UniqueValuesConstraint implements ConstraintValidator<UniqueValues,
 
     private Class<?> domainClass;
 
+    private String message;
+
     @Override
     public void initialize(UniqueValues constraintAnnotation) {
         fields = Arrays.asList(constraintAnnotation.fields());
         domainClass = constraintAnnotation.domainClass();
+        message = constraintAnnotation.message();
     }
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
         if (o == null) return true;
-        return createQuery(o).getResultList().isEmpty();
+        var isValid = createQuery(o).getResultList().isEmpty();
+        if (!isValid) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            for (var field : fields) {
+                constraintValidatorContext
+                        .buildConstraintViolationWithTemplate(message)
+                        .addPropertyNode(field).addConstraintViolation();
+            }
+        }
+        return isValid;
     }
 
     private String getTableName() {
@@ -41,7 +53,6 @@ public class UniqueValuesConstraint implements ConstraintValidator<UniqueValues,
         var bean = new BeanWrapperImpl(o);
         stringBuilder.append("select t from ").append(getTableName()).append(" t where ");
         fields.forEach(field -> {
-            var descriptor = bean.getPropertyDescriptor(field);
             var alias = field;
             try {
                 var fieldAlias = o.getClass().getDeclaredField(field).getAnnotation(FieldAlias.class);

@@ -1,6 +1,6 @@
 package zup.jonas.souza.casadocodigo.validation.annotation;
 
-import zup.jonas.souza.casadocodigo.validation.RequiredCondition;
+import zup.jonas.souza.casadocodigo.validation.interfaces.RequiredCondition;
 import zup.jonas.souza.casadocodigo.validation.constraints.RequiredIfConstraint;
 
 import javax.validation.Constraint;
@@ -11,11 +11,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = RequiredIfConstraint.class)
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredIf {
 
     Class<? extends RequiredCondition> value();
+
+    String field();
 
     String message() default "obrigatório";
 

@@ -1,8 +1,5 @@
 package zup.jonas.souza.casadocodigo.model;
 
-import zup.jonas.souza.casadocodigo.validation.RequiredIfPaisTemEstado;
-import zup.jonas.souza.casadocodigo.validation.annotation.RequiredIf;
-
 import javax.persistence.*;
 
 @Entity
@@ -33,7 +30,6 @@ public class Cliente {
 
     @ManyToOne
     @JoinColumn(nullable = true)
-    @RequiredIf(RequiredIfPaisTemEstado.class)
     private Estado estado;
 
     private String telefone;
