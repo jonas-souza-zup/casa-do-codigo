@@ -1,0 +1,132 @@
+package br.com.zup.casadocodigo.controller.request;
+
+import br.com.zup.casadocodigo.validation.CustomerGroupSequenceProvider;
+import br.com.zup.casadocodigo.validation.RequiredIfCountryHasState;
+import br.com.zup.casadocodigo.validation.annotation.CpfOuCnpj;
+import br.com.zup.casadocodigo.validation.annotation.RequiredIf;
+import br.com.zup.casadocodigo.validation.annotation.Unique;
+import br.com.zup.casadocodigo.validation.interfaces.CnpjGroup;
+import br.com.zup.casadocodigo.validation.interfaces.CpfGroup;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
+import org.hibernate.validator.group.GroupSequenceProvider;
+import br.com.zup.casadocodigo.exception.NotFoundException;
+import br.com.zup.casadocodigo.model.Customer;
+import br.com.zup.casadocodigo.model.State;
+import br.com.zup.casadocodigo.model.Country;
+import br.com.zup.casadocodigo.repository.StateRepository;
+import br.com.zup.casadocodigo.repository.CountryRepository;
+import br.com.zup.casadocodigo.validation.annotation.Exists;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+@GroupSequenceProvider(CustomerGroupSequenceProvider.class)
+@RequiredIf(value = RequiredIfCountryHasState.class, field = "estadoId")
+public class NewCustomerRequest {
+
+    @Email
+    @Unique(modelClass = Customer.class, field = "email")
+    private String email;
+
+    @NotBlank
+    private String name;
+
+    @NotBlank
+    private String lastName;
+
+    @NotBlank
+    @CpfOuCnpj
+    @Unique(modelClass = Customer.class, field = "document")
+    private String document;
+
+    @NotBlank
+    private String address;
+
+    @NotBlank
+    private String complement;
+
+    @NotBlank
+    private String city;
+
+    @NotNull
+    @Exists(modelClass = Country.class, field = "id")
+    private Integer countryId;
+
+    @Exists(modelClass = State.class, field = "id")
+    private Long stateId;
+
+    @NotBlank
+    private String phone;
+
+    @NotBlank
+    private String cep;
+
+    public NewCustomerRequest(@Email String email, @NotBlank String name, @NotBlank String lastName, @NotBlank @CPF(groups = CpfGroup.class) @CNPJ(groups = CnpjGroup.class) String document, @NotBlank String address, @NotBlank String complement, @NotBlank String city, @NotNull Integer countryId, Long stateId, @NotBlank String phone, @NotBlank String cep) {
+        this.email = email;
+        this.name = name;
+        this.lastName = lastName;
+        this.document = document;
+        this.address = address;
+        this.complement = complement;
+        this.city = city;
+        this.countryId = countryId;
+        this.stateId = stateId;
+        this.phone = phone;
+        this.cep = cep;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public Integer getCountryId() {
+        return countryId;
+    }
+
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public Customer toModel(CountryRepository countryRepository, StateRepository stateRepository) {
+        var country = countryRepository.findById(countryId).orElseThrow(() -> new NotFoundException(countryId));
+        State state = null;
+        if (stateId != null) {
+            state = stateRepository.findById(stateId).orElseThrow(() -> new NotFoundException(stateId));
+        }
+        return new Customer(email, name, lastName, document, address, complement, city, country, state, phone, cep);
+    }
+}
