@@ -25,15 +25,15 @@ public class ExistsConstraint implements ConstraintValidator<Exists, Object> {
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
         if(value == null) return true;
-        return !createQuery(value).getResultList().isEmpty();
+        return !createQuery().setParameter("value", value).getResultList().isEmpty();
     }
 
     private String getTableName() {
         return modelClass.getSimpleName();
     }
 
-    private Query createQuery(Object value) {
-        return manager.createQuery("select " + field + " from " + getTableName() + " t where t." + field + " = '" + value + "'");
+    private Query createQuery() {
+        return manager.createQuery("from " + getTableName() + " t where t." + field + " = :value");
     }
 
 }
