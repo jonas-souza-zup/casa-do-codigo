@@ -25,8 +25,8 @@ public class CountryController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CountryDto> save(@RequestBody @Valid NewCountryRequest form, UriComponentsBuilder uriBuilder) {
-        var country = countryRepository.save(form.toModel());
+    public ResponseEntity<CountryDto> save(@RequestBody @Valid NewCountryRequest req, UriComponentsBuilder uriBuilder) {
+        var country = countryRepository.save(req.toModel());
         URI uri = uriBuilder.path("/countries/{id}").buildAndExpand(country.getId()).toUri();
         return ResponseEntity.created(uri).body(new CountryDto(country));
     }

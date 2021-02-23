@@ -22,8 +22,8 @@ public class AuthorController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<AuthorDto> save(@RequestBody @Valid NewAuthorRequest form, UriComponentsBuilder uriBuilder) {
-        var author = authorRepository.save(form.toModel());
+    public ResponseEntity<AuthorDto> save(@RequestBody @Valid NewAuthorRequest req, UriComponentsBuilder uriBuilder) {
+        var author = authorRepository.save(req.toModel());
         URI uri = uriBuilder.path("/authors/{id}").buildAndExpand(author.getId()).toUri();
         return ResponseEntity.created(uri).body(new AuthorDto(author));
     }

@@ -22,8 +22,8 @@ public class CategoryController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CategoryDto> save(@RequestBody @Valid NewCategoryRequest form, UriComponentsBuilder uriBuilder) {
-        var category = categoryRepository.save(form.toModel());
+    public ResponseEntity<CategoryDto> save(@RequestBody @Valid NewCategoryRequest req, UriComponentsBuilder uriBuilder) {
+        var category = categoryRepository.save(req.toModel());
         URI uri = uriBuilder.path("/categories/{id}").buildAndExpand(category.getId()).toUri();
         return ResponseEntity.created(uri).body(new CategoryDto(category));
     }

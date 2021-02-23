@@ -33,8 +33,8 @@ public class CustomerController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<CustomerDto> save(@RequestBody @Valid NewCustomerRequest form, UriComponentsBuilder uriBuilder) {
-        var customer = customerRepository.save(form.toModel(countryRepository, stateRepository));
+    public ResponseEntity<CustomerDto> save(@RequestBody @Valid NewCustomerRequest req, UriComponentsBuilder uriBuilder) {
+        var customer = customerRepository.save(req.toModel(countryRepository, stateRepository));
         URI uri = uriBuilder.path("/customers/{id}").buildAndExpand(customer.getId()).toUri();
         return ResponseEntity.created(uri).body(new CustomerDto(customer));
     }

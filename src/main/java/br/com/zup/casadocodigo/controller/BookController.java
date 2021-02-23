@@ -35,8 +35,8 @@ public class BookController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<BookDetailDto> save(@RequestBody @Valid NewBookRequest form, UriComponentsBuilder uriBuilder) {
-        var book = bookRepository.save(form.toModel(authorRepository, categoryRepository));
+    public ResponseEntity<BookDetailDto> save(@RequestBody @Valid NewBookRequest req, UriComponentsBuilder uriBuilder) {
+        var book = bookRepository.save(req.toModel(authorRepository, categoryRepository));
         URI uri = uriBuilder.path("/books/{id}").buildAndExpand(book.getId()).toUri();
         return ResponseEntity.created(uri).body(new BookDetailDto(book));
     }

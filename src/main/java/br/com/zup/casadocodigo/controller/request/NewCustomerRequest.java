@@ -23,7 +23,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @GroupSequenceProvider(CustomerGroupSequenceProvider.class)
-@RequiredIf(value = RequiredIfCountryHasState.class, field = "estadoId")
+@RequiredIf(value = RequiredIfCountryHasState.class, field = "stateId")
 public class NewCustomerRequest {
 
     @Email

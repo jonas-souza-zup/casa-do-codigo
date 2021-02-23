@@ -28,8 +28,8 @@ public class StateController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<StateDto> save(@RequestBody @Valid NewStateRequest form, UriComponentsBuilder uriBuilder) {
-        var state = stateRepository.save(form.toModel(countryRepository));
+    public ResponseEntity<StateDto> save(@RequestBody @Valid NewStateRequest req, UriComponentsBuilder uriBuilder) {
+        var state = stateRepository.save(req.toModel(countryRepository));
         URI uri = uriBuilder.path("/states/{id}").buildAndExpand(state.getId()).toUri();
         return ResponseEntity.created(uri).body(new StateDto(state));
     }
