@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class NewBookRequest {
 
     @NotBlank
-    @Unique(modelClass = Book.class, field = "title")
+    @Unique(field = "title", modelClass = Book.class)
     private String title;
 
     @NotBlank
@@ -34,18 +34,18 @@ public class NewBookRequest {
     private Integer pageCount;
 
     @NotBlank
-    @Unique(modelClass = Book.class, field = "isbn")
+    @Unique(field = "isbn", modelClass = Book.class)
     private String isbn;
 
     @Future
     private LocalDate publishDate;
 
     @NotNull
-    @Exists(modelClass = Category.class, field = "id")
+    @Exists(field = "id", modelClass = Category.class)
     private Long categoryId;
 
     @NotNull
-    @Exists(modelClass = Author.class, field = "id")
+    @Exists(field = "id", modelClass = Author.class)
     private Long authorId;
 
     public NewBookRequest(@NotBlank String title, @NotBlank @Size(max = 500) String resume, String summary, @NotNull @NotEmpty @Min(20) BigDecimal price, @NotNull @Min(100) Integer pageCount, @NotBlank String isbn, @Future LocalDate publishDate, @NotNull Long categoryId, @NotNull Long authorId) {

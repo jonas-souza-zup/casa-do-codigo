@@ -1,6 +1,6 @@
 package br.com.zup.casadocodigo.validation.annotation;
 
-import br.com.zup.casadocodigo.validation.interfaces.RequiredCondition;
+import br.com.zup.casadocodigo.validation.interfaces.RequiredIfCondition;
 import br.com.zup.casadocodigo.validation.constraints.RequiredIfConstraint;
 
 import javax.validation.Constraint;
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredIf {
 
-    Class<? extends RequiredCondition> value();
+    Class<? extends RequiredIfCondition> condition();
 
     String field();
 

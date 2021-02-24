@@ -1,33 +1,30 @@
 package br.com.zup.casadocodigo.controller.request;
 
-import br.com.zup.casadocodigo.validation.CustomerGroupSequenceProvider;
+import br.com.zup.casadocodigo.exception.NotFoundException;
+import br.com.zup.casadocodigo.model.Country;
+import br.com.zup.casadocodigo.model.Customer;
+import br.com.zup.casadocodigo.model.State;
+import br.com.zup.casadocodigo.repository.CountryRepository;
+import br.com.zup.casadocodigo.repository.StateRepository;
 import br.com.zup.casadocodigo.validation.RequiredIfCountryHasState;
 import br.com.zup.casadocodigo.validation.annotation.CpfOuCnpj;
+import br.com.zup.casadocodigo.validation.annotation.Exists;
 import br.com.zup.casadocodigo.validation.annotation.RequiredIf;
 import br.com.zup.casadocodigo.validation.annotation.Unique;
 import br.com.zup.casadocodigo.validation.interfaces.CnpjGroup;
 import br.com.zup.casadocodigo.validation.interfaces.CpfGroup;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
-import org.hibernate.validator.group.GroupSequenceProvider;
-import br.com.zup.casadocodigo.exception.NotFoundException;
-import br.com.zup.casadocodigo.model.Customer;
-import br.com.zup.casadocodigo.model.State;
-import br.com.zup.casadocodigo.model.Country;
-import br.com.zup.casadocodigo.repository.StateRepository;
-import br.com.zup.casadocodigo.repository.CountryRepository;
-import br.com.zup.casadocodigo.validation.annotation.Exists;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@GroupSequenceProvider(CustomerGroupSequenceProvider.class)
-@RequiredIf(value = RequiredIfCountryHasState.class, field = "stateId")
+@RequiredIf(field = "stateId", condition = RequiredIfCountryHasState.class)
 public class NewCustomerRequest {
 
     @Email
-    @Unique(modelClass = Customer.class, field = "email")
+    @Unique(field = "email", modelClass = Customer.class)
     private String email;
 
     @NotBlank
@@ -38,7 +35,7 @@ public class NewCustomerRequest {
 
     @NotBlank
     @CpfOuCnpj
-    @Unique(modelClass = Customer.class, field = "document")
+    @Unique(field = "document", modelClass = Customer.class)
     private String document;
 
     @NotBlank
@@ -51,10 +48,10 @@ public class NewCustomerRequest {
     private String city;
 
     @NotNull
-    @Exists(modelClass = Country.class, field = "id")
+    @Exists(field = "id", modelClass = Country.class)
     private Integer countryId;
 
-    @Exists(modelClass = State.class, field = "id")
+    @Exists(field = "id", modelClass = State.class)
     private Long stateId;
 
     @NotBlank

@@ -14,7 +14,7 @@ public @interface UniqueValues {
 
     String[] fields();
 
-    Class<?> domainClass();
+    Class<?> modelClass();
 
     String message() default "deve ser único";
 

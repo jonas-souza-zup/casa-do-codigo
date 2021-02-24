@@ -1,8 +1,8 @@
 package br.com.zup.casadocodigo.validation.constraints;
 
-import br.com.zup.casadocodigo.validation.annotation.FieldAlias;
-import org.springframework.beans.BeanWrapperImpl;
 import br.com.zup.casadocodigo.validation.annotation.UniqueValues;
+import br.com.zup.casadocodigo.validation.util.ValidationUtils;
+import org.springframework.beans.BeanWrapperImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,21 +18,24 @@ public class UniqueValuesConstraint implements ConstraintValidator<UniqueValues,
 
     private List<String> fields;
 
-    private Class<?> domainClass;
+    private Class<?> modelClass;
 
     private String message;
 
     @Override
     public void initialize(UniqueValues constraintAnnotation) {
         fields = Arrays.asList(constraintAnnotation.fields());
-        domainClass = constraintAnnotation.domainClass();
+        modelClass = constraintAnnotation.modelClass();
         message = constraintAnnotation.message();
     }
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
         if (o == null) return true;
-        var isValid = createQuery(o).getResultList().isEmpty();
+        var query = createQuery(o);
+        var bean = new BeanWrapperImpl(o);
+        fields.forEach(field -> query.setParameter(field, bean.getPropertyValue(field)));
+        var isValid = query.getResultList().isEmpty();
         if (!isValid) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             for (var field : fields) {
@@ -45,29 +48,18 @@ public class UniqueValuesConstraint implements ConstraintValidator<UniqueValues,
     }
 
     private String getTableName() {
-        return domainClass.getSimpleName();
+        return modelClass.getSimpleName();
     }
 
     private Query createQuery(Object o) {
         var stringBuilder = new StringBuilder();
-        var bean = new BeanWrapperImpl(o);
-        stringBuilder.append("select t from ").append(getTableName()).append(" t where ");
+        stringBuilder.append("from ").append(getTableName()).append(" t where ");
         fields.forEach(field -> {
-            var alias = field;
-            try {
-                var fieldAlias = o.getClass().getDeclaredField(field).getAnnotation(FieldAlias.class);
-                if (fieldAlias != null) {
-                    alias = fieldAlias.value();
-                }
-            } catch (NoSuchFieldException e) {
-                throw new RuntimeException(e);
-            }
+            var alias = ValidationUtils.getFieldAlias(o, field, field);
             stringBuilder
                     .append(" and t.")
                     .append(alias)
-                    .append(" = '")
-                    .append(bean.getPropertyValue(field))
-                    .append("'");
+                    .append(" = :").append(field);
 
         });
         return manager.createQuery(stringBuilder.toString().replaceFirst("and", ""));

@@ -13,6 +13,8 @@ import java.lang.annotation.*;
 public @interface Unique {
     String field();
 
+    String alias() default "";
+
     Class<?> modelClass();
 
     String message() default "deve ser único";

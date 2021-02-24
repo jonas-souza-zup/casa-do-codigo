@@ -11,14 +11,14 @@ import br.com.zup.casadocodigo.validation.annotation.UniqueValues;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@UniqueValues(domainClass = State.class, fields = {"name", "countryId"})
+@UniqueValues(modelClass = State.class, fields = {"name", "countryId"})
 public class NewStateRequest {
 
     @NotBlank
     private String name;
 
     @NotNull
-    @Exists(modelClass = Country.class, field = "id")
+    @Exists(field = "id", modelClass = Country.class)
     @FieldAlias("country.id")
     private Integer countryId;
 

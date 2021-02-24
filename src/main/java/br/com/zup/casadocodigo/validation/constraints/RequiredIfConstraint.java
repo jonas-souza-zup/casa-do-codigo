@@ -1,7 +1,7 @@
 package br.com.zup.casadocodigo.validation.constraints;
 
 import br.com.zup.casadocodigo.validation.annotation.RequiredIf;
-import br.com.zup.casadocodigo.validation.interfaces.RequiredCondition;
+import br.com.zup.casadocodigo.validation.interfaces.RequiredIfCondition;
 import org.springframework.beans.BeanWrapperImpl;
 
 import javax.persistence.EntityManager;
@@ -14,7 +14,7 @@ public class RequiredIfConstraint implements ConstraintValidator<RequiredIf, Obj
     @PersistenceContext
     private EntityManager manager;
 
-    private RequiredCondition condition;
+    private RequiredIfCondition condition;
 
     private String field;
 
@@ -23,7 +23,7 @@ public class RequiredIfConstraint implements ConstraintValidator<RequiredIf, Obj
     @Override
     public void initialize(RequiredIf constraintAnnotation) {
         try {
-            condition = constraintAnnotation.value().getDeclaredConstructor().newInstance();
+            condition = constraintAnnotation.condition().getDeclaredConstructor().newInstance();
             field = constraintAnnotation.field();
             message = constraintAnnotation.message();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

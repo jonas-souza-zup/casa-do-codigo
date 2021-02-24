@@ -14,17 +14,20 @@ public class ExistsConstraint implements ConstraintValidator<Exists, Object> {
 
     private String field;
 
+    private String alias;
+
     private Class<?> modelClass;
 
     @Override
     public void initialize(Exists constraintAnnotation) {
         field = constraintAnnotation.field();
+        alias = constraintAnnotation.alias();
         modelClass = constraintAnnotation.modelClass();
     }
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
-        if(value == null) return true;
+        if (value == null) return true;
         return !createQuery().setParameter("value", value).getResultList().isEmpty();
     }
 
@@ -33,7 +36,8 @@ public class ExistsConstraint implements ConstraintValidator<Exists, Object> {
     }
 
     private Query createQuery() {
-        return manager.createQuery("from " + getTableName() + " t where t." + field + " = :value");
+        var alias = this.alias != null && !this.alias.isEmpty() ? this.alias : this.field;
+        return manager.createQuery("from " + getTableName() + " t where t." + alias + " = :value");
     }
 
 }

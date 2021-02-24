@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 public class NewCountryRequest {
 
     @NotBlank
-    @Unique(modelClass = Country.class, field = "name")
+    @Unique(field = "name", modelClass = Country.class)
     private String name;
 
     @Deprecated
